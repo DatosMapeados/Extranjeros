@@ -8,6 +8,8 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css">
         <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/filter.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
         <link rel="stylesheet" href="css/leaflet-measure.css">
         <style>
         html, body, #map {
@@ -32,6 +34,9 @@
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
         <script src="js/leaflet-measure.js"></script>
+        <script src="js/tailDT.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/wNumb.js"></script>
         <script src="data/Quilmes_1.js"></script>
         <script>
         var highlightLayer;
@@ -323,6 +328,154 @@
         var baseMaps = {};
         L.control.layers(baseMaps,{'Quilmes<br /><table><tr><td style="text-align: center;"><img src="legend/Quilmes_1_bolivia0.png" /></td><td>bolivia</td></tr><tr><td style="text-align: center;"><img src="legend/Quilmes_1_brasil1.png" /></td><td>brasil</td></tr><tr><td style="text-align: center;"><img src="legend/Quilmes_1_chile2.png" /></td><td>chile</td></tr><tr><td style="text-align: center;"><img src="legend/Quilmes_1_desconocido3.png" /></td><td>desconocido</td></tr><tr><td style="text-align: center;"><img src="legend/Quilmes_1_españa4.png" /></td><td>españa</td></tr><tr><td style="text-align: center;"><img src="legend/Quilmes_1_italia5.png" /></td><td>italia</td></tr><tr><td style="text-align: center;"><img src="legend/Quilmes_1_paraguay6.png" /></td><td>paraguay</td></tr><tr><td style="text-align: center;"><img src="legend/Quilmes_1_peru7.png" /></td><td>peru</td></tr><tr><td style="text-align: center;"><img src="legend/Quilmes_1_republicapopularchina8.png" /></td><td>republica popular china</td></tr><tr><td style="text-align: center;"><img src="legend/Quilmes_1_uruguay9.png" /></td><td>uruguay</td></tr></table>': layer_Quilmes_1,"GoogleMaps": layer_GoogleMaps_0,}).addTo(map);
         setBounds();
+        var mapDiv = document.getElementById('map');
+        var row = document.createElement('div');
+        row.className="row";
+        row.id="all";
+        row.style.height = "100%";
+        var col1 = document.createElement('div');
+        col1.className="col9";
+        col1.id = "mapWindow";
+        col1.style.height = "99%";
+        col1.style.width = "80%";
+        col1.style.display = "inline-block";
+        var col2 = document.createElement('div');
+        col2.className="col3";
+        col2.id = "menu";
+        col2.style.display = "inline-block";
+        mapDiv.parentNode.insertBefore(row, mapDiv);
+        document.getElementById("all").appendChild(col1);
+        document.getElementById("all").appendChild(col2);
+        col1.appendChild(mapDiv)
+        var Filters = {"Pais_de_or": "str"};
+        function filterFunc() {
+          map.eachLayer(function(lyr){
+          if ("options" in lyr && "dataVar" in lyr["options"]){
+            features = this[lyr["options"]["dataVar"]].features.slice(0);
+            try{
+              for (key in Filters){
+                keyS = key.replace(/[^a-zA-Z0-9_]/g, "")
+                if (Filters[key] == "str" || Filters[key] == "bool"){
+                  var selection = [];
+                  var options = document.getElementById("sel_" + keyS).options
+                  for (var i=0; i < options.length; i++) {
+                    if (options[i].selected) selection.push(options[i].value);
+                  }
+                    try{
+                      if (key in features[0].properties){
+                        for (i = features.length - 1;
+                          i >= 0; --i){
+                          if (selection.indexOf(
+                          features[i].properties[key])<0
+                          && selection.length>0) {
+                          features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                  }
+                }
+                if (Filters[key] == "int"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (parseInt(features[i].properties[key])
+                          < sliderVals[0]
+                          || parseInt(features[i].properties[key])
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "real"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (features[i].properties[key]
+                          < sliderVals[0]
+                          || features[i].properties[key]
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "date"
+                  || Filters[key] == "datetime"
+                  || Filters[key] == "time"){
+                  try{
+                    if (key in features[0].properties){
+                      HTMLkey = key.replace(/[&\/\\#,+()$~%.'":*?<>{} ]/g, '');
+                      startdate = document.getElementById("dat_" +
+                        HTMLkey + "_date1").value.replace(" ", "T");
+                      enddate = document.getElementById("dat_" +
+                        HTMLkey + "_date2").value.replace(" ", "T");
+                      for (i = features.length - 1; i >= 0; --i){
+                        if (features[i].properties[key] < startdate
+                          || features[i].properties[key] > enddate){
+                          features.splice(i,1);
+                        }
+                      }
+                    }
+                  } catch(err){
+                  }
+                }
+              }
+            } catch(err){
+            }
+          this[lyr["options"]["layerName"]].clearLayers();
+          this[lyr["options"]["layerName"]].addData(features);
+          }
+          })
+        }
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Pais_de_or = document.createElement('div');
+            div_Pais_de_or.id = "div_Pais_de_or";
+            div_Pais_de_or.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Pais_de_or);
+            sel_Pais_de_or = document.createElement('select');
+            sel_Pais_de_or.multiple = true;
+            sel_Pais_de_or.size = 10;
+            sel_Pais_de_or.id = "sel_Pais_de_or";
+            var Pais_de_or_options_str = "<option value='' unselected></option>";
+            sel_Pais_de_or.onchange = function(){filterFunc()};
+            Pais_de_or_options_str  += '<option value="bolivia">bolivia</option>';
+            Pais_de_or_options_str  += '<option value="brasil">brasil</option>';
+            Pais_de_or_options_str  += '<option value="chile">chile</option>';
+            Pais_de_or_options_str  += '<option value="desconocido">desconocido</option>';
+            Pais_de_or_options_str  += '<option value="espaÃ±a">espaÃ±a</option>';
+            Pais_de_or_options_str  += '<option value="italia">italia</option>';
+            Pais_de_or_options_str  += '<option value="paraguay">paraguay</option>';
+            Pais_de_or_options_str  += '<option value="peru">peru</option>';
+            Pais_de_or_options_str  += '<option value="republica popular china">republica popular china</option>';
+            Pais_de_or_options_str  += '<option value="uruguay">uruguay</option>';
+            sel_Pais_de_or.innerHTML = Pais_de_or_options_str;
+            div_Pais_de_or.appendChild(sel_Pais_de_or);
+            var lab_Pais_de_or = document.createElement('div');
+            lab_Pais_de_or.innerHTML = 'Pais_de_or';
+            lab_Pais_de_or.className = 'filterlabel';
+            div_Pais_de_or.appendChild(lab_Pais_de_or);
+            var reset_Pais_de_or = document.createElement('div');
+            reset_Pais_de_or.innerHTML = 'clear filter';
+            reset_Pais_de_or.className = 'filterlabel';
+            reset_Pais_de_or.onclick = function() {
+                var options = document.getElementById("sel_Pais_de_or").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Pais_de_or.appendChild(reset_Pais_de_or);
         </script>
     </body>
 </html>
