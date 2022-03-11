@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/Partidos_10.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        map.createPane('pane_MapaBase_0');
+        map.getPane('pane_MapaBase_0').style.zIndex = 400;
+        var layer_MapaBase_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+            pane: 'pane_MapaBase_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_MapaBase_0;
+        map.addLayer(layer_MapaBase_0);
+        map.createPane('pane_Peru_1');
+        map.getPane('pane_Peru_1').style.zIndex = 401;
+        var img_Peru_1 = 'data/Peru_1.png';
+        var img_bounds_Peru_1 = [[-38.69898739999999,-60.6992113],[-33.596959399999996,-57.7670113]];
+        var layer_Peru_1 = new L.imageOverlay(img_Peru_1,
+                                              img_bounds_Peru_1,
+                                              {pane: 'pane_Peru_1'});
+        bounds_group.addLayer(layer_Peru_1);
+        map.addLayer(layer_Peru_1);
+        map.createPane('pane_Uruguay_2');
+        map.getPane('pane_Uruguay_2').style.zIndex = 402;
+        var img_Uruguay_2 = 'data/Uruguay_2.png';
+        var img_bounds_Uruguay_2 = [[-38.7118409107,-60.6975620933],[-33.5720769107,-57.7203500933]];
+        var layer_Uruguay_2 = new L.imageOverlay(img_Uruguay_2,
+                                              img_bounds_Uruguay_2,
+                                              {pane: 'pane_Uruguay_2'});
+        bounds_group.addLayer(layer_Uruguay_2);
+        map.addLayer(layer_Uruguay_2);
+        map.createPane('pane_Paraguay_3');
+        map.getPane('pane_Paraguay_3').style.zIndex = 403;
+        var img_Paraguay_3 = 'data/Paraguay_3.png';
+        var img_bounds_Paraguay_3 = [[-38.7217814,-60.6993637992],[-33.5554124,-57.7408447992]];
+        var layer_Paraguay_3 = new L.imageOverlay(img_Paraguay_3,
+                                              img_bounds_Paraguay_3,
+                                              {pane: 'pane_Paraguay_3'});
+        bounds_group.addLayer(layer_Paraguay_3);
+        map.addLayer(layer_Paraguay_3);
+        map.createPane('pane_Italia_4');
+        map.getPane('pane_Italia_4').style.zIndex = 404;
+        var img_Italia_4 = 'data/Italia_4.png';
+        var img_bounds_Italia_4 = [[-38.701994584199994,-60.6953125081],[-33.5801565842,-57.7199095081]];
+        var layer_Italia_4 = new L.imageOverlay(img_Italia_4,
+                                              img_bounds_Italia_4,
+                                              {pane: 'pane_Italia_4'});
+        bounds_group.addLayer(layer_Italia_4);
+        map.addLayer(layer_Italia_4);
+        map.createPane('pane_Espaa_5');
+        map.getPane('pane_Espaa_5').style.zIndex = 405;
+        var img_Espaa_5 = 'data/Espaa_5.png';
+        var img_bounds_Espaa_5 = [[-38.7059602,-60.679713531000004],[-33.5733702,-57.773655531]];
+        var layer_Espaa_5 = new L.imageOverlay(img_Espaa_5,
+                                              img_bounds_Espaa_5,
+                                              {pane: 'pane_Espaa_5'});
+        bounds_group.addLayer(layer_Espaa_5);
+        map.addLayer(layer_Espaa_5);
+        map.createPane('pane_China_6');
+        map.getPane('pane_China_6').style.zIndex = 406;
+        var img_China_6 = 'data/China_6.png';
+        var img_bounds_China_6 = [[-38.6904637014,-60.687574069600004],[-33.7834737014,-57.809574069600004]];
+        var layer_China_6 = new L.imageOverlay(img_China_6,
+                                              img_bounds_China_6,
+                                              {pane: 'pane_China_6'});
+        bounds_group.addLayer(layer_China_6);
+        map.addLayer(layer_China_6);
+        map.createPane('pane_Chile_7');
+        map.getPane('pane_Chile_7').style.zIndex = 407;
+        var img_Chile_7 = 'data/Chile_7.png';
+        var img_bounds_Chile_7 = [[-38.7075581,-60.6945686083],[-33.5824931,-57.757568608300005]];
+        var layer_Chile_7 = new L.imageOverlay(img_Chile_7,
+                                              img_bounds_Chile_7,
+                                              {pane: 'pane_Chile_7'});
+        bounds_group.addLayer(layer_Chile_7);
+        map.addLayer(layer_Chile_7);
+        map.createPane('pane_Bolivia_8');
+        map.getPane('pane_Bolivia_8').style.zIndex = 408;
+        var img_Bolivia_8 = 'data/Bolivia_8.png';
+        var img_bounds_Bolivia_8 = [[-38.694896109999995,-60.7097702841],[-33.57907511,-57.761170284100004]];
+        var layer_Bolivia_8 = new L.imageOverlay(img_Bolivia_8,
+                                              img_bounds_Bolivia_8,
+                                              {pane: 'pane_Bolivia_8'});
+        bounds_group.addLayer(layer_Bolivia_8);
+        map.addLayer(layer_Bolivia_8);
+        map.createPane('pane_Brasil_9');
+        map.getPane('pane_Brasil_9').style.zIndex = 409;
+        var img_Brasil_9 = 'data/Brasil_9.png';
+        var img_bounds_Brasil_9 = [[-38.7008339817,-60.6854395668],[-33.5756269817,-57.7671205668]];
+        var layer_Brasil_9 = new L.imageOverlay(img_Brasil_9,
+                                              img_bounds_Brasil_9,
+                                              {pane: 'pane_Brasil_9'});
+        bounds_group.addLayer(layer_Brasil_9);
+        map.addLayer(layer_Brasil_9);
+        function pop_Partidos_10(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['gid'] !== null ? autolinker.link(feature.properties['gid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['objeto'] !== null ? autolinker.link(feature.properties['objeto'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fna'] !== null ? autolinker.link(feature.properties['fna'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['gna'] !== null ? autolinker.link(feature.properties['gna'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>nam</strong><br />' + (feature.properties['nam'] !== null ? autolinker.link(feature.properties['nam'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['in1'] !== null ? autolinker.link(feature.properties['in1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fdc'] !== null ? autolinker.link(feature.properties['fdc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['sag'] !== null ? autolinker.link(feature.properties['sag'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Partidos_10_0() {
+            return {
+                pane: 'pane_Partidos_10',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(164,113,88,0.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Partidos_10');
+        map.getPane('pane_Partidos_10').style.zIndex = 410;
+        map.getPane('pane_Partidos_10').style['mix-blend-mode'] = 'normal';
+        var layer_Partidos_10 = new L.geoJson(json_Partidos_10, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Partidos_10',
+            layerName: 'layer_Partidos_10',
+            pane: 'pane_Partidos_10',
+            onEachFeature: pop_Partidos_10,
+            style: style_Partidos_10_0,
+        });
+        bounds_group.addLayer(layer_Partidos_10);
+        map.addLayer(layer_Partidos_10);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/Partidos_10.png" /> Partidos': layer_Partidos_10,"Brasil": layer_Brasil_9,"Bolivia": layer_Bolivia_8,"Chile": layer_Chile_7,"China": layer_China_6,"España": layer_Espaa_5,"Italia": layer_Italia_4,"Paraguay": layer_Paraguay_3,"Uruguay": layer_Uruguay_2,"Peru": layer_Peru_1,"Mapa Base": layer_MapaBase_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        </script>
+    </body>
+</html>
